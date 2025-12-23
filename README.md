@@ -1,2 +1,1 @@
-# stack-counter
-Counter dApp on stacks
+StackCounter is a minimal dapp demonstrating WalletKit SDK usage to interact with a live Stacks mainnet smart contract. Users connect their wallet and increment an onchain counter via a signed transaction.
