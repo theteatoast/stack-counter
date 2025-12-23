@@ -159,6 +159,14 @@ function App() {
         }
     }, [connected]);
 
+    // Auto-refresh counter every 30 seconds when transaction is pending/success
+    useEffect(() => {
+        if (connected && (txStatus === 'success' || txStatus === 'pending')) {
+            const interval = setInterval(fetchCounter, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [connected, txStatus]);
+
     const fetchCounter = async () => {
         try {
             const value = await getCounter();
@@ -248,6 +256,21 @@ function App() {
                                     {counter !== null ? counter : '—'}
                                 </span>
                                 <span style={styles.counterLabel}>Current Count</span>
+                                <button
+                                    onClick={fetchCounter}
+                                    style={{
+                                        background: 'rgba(255,255,255,0.1)',
+                                        border: 'none',
+                                        color: '#64ffda',
+                                        padding: '8px 16px',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        fontSize: '12px',
+                                        marginTop: '8px',
+                                    }}
+                                >
+                                    🔄 Refresh Count
+                                </button>
                             </div>
                             <button
                                 style={{
@@ -280,8 +303,11 @@ function App() {
                         )}
                         {txStatus === 'success' && txId && (
                             <>
-                                <p style={{ color: '#64ffda', margin: '0 0 12px 0' }}>
-                                    ✅ Transaction submitted successfully!
+                                <p style={{ color: '#64ffda', margin: '0 0 8px 0' }}>
+                                    ✅ Transaction submitted!
+                                </p>
+                                <p style={{ color: '#8892b0', margin: '0 0 12px 0', fontSize: '13px' }}>
+                                    ⏱️ Mainnet transactions take ~10-30 min to confirm. Counter will auto-refresh.
                                 </p>
                                 <a
                                     href={getExplorerUrl(txId)}
