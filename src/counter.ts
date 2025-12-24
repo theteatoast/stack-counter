@@ -1,6 +1,6 @@
 import { openContractCall } from '@stacks/connect';
 import { StacksMainnet } from '@stacks/network';
-import { callReadOnlyFunction, cvToValue, uintCV } from '@stacks/transactions';
+import { callReadOnlyFunction, cvToValue } from '@stacks/transactions';
 import { userSession } from './wallet';
 
 const CONTRACT_ADDRESS = 'SP7EGRZWRGBDHWDMJAYER4D40JM8XZCEX14M4ATQ';

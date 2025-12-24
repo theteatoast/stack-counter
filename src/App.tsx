@@ -1,147 +1,6 @@
-import { useState, useEffect, CSSProperties } from 'react';
+import { useState, useEffect } from 'react';
 import { connect, disconnect, isConnected, getAddress } from './wallet';
 import { incrementCounter, getCounter, getExplorerUrl } from './counter';
-
-const styles: Record<string, CSSProperties> = {
-    body: {
-        margin: 0,
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        background: 'linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)',
-        minHeight: '100vh',
-        color: '#fff',
-    },
-    container: {
-        maxWidth: '600px',
-        margin: '0 auto',
-        padding: '40px 20px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '32px',
-    },
-    header: {
-        textAlign: 'center' as const,
-    },
-    logo: {
-        fontSize: '48px',
-        marginBottom: '8px',
-    },
-    title: {
-        fontSize: '32px',
-        fontWeight: 700,
-        margin: '0 0 8px 0',
-        background: 'linear-gradient(90deg, #fc6e51, #e74c3c)',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-    },
-    subtitle: {
-        fontSize: '14px',
-        color: '#8892b0',
-        margin: 0,
-        maxWidth: '400px',
-    },
-    card: {
-        background: 'rgba(255, 255, 255, 0.03)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-        borderRadius: '16px',
-        padding: '24px',
-        width: '100%',
-        boxSizing: 'border-box' as const,
-        backdropFilter: 'blur(10px)',
-    },
-    cardTitle: {
-        fontSize: '12px',
-        fontWeight: 600,
-        color: '#8892b0',
-        textTransform: 'uppercase' as const,
-        letterSpacing: '1px',
-        marginBottom: '16px',
-    },
-    walletAddress: {
-        fontFamily: 'monospace',
-        fontSize: '14px',
-        color: '#64ffda',
-        background: 'rgba(100, 255, 218, 0.1)',
-        padding: '12px 16px',
-        borderRadius: '8px',
-        wordBreak: 'break-all' as const,
-    },
-    counterDisplay: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column' as const,
-        gap: '8px',
-    },
-    counterValue: {
-        fontSize: '72px',
-        fontWeight: 700,
-        color: '#fff',
-        lineHeight: 1,
-    },
-    counterLabel: {
-        fontSize: '14px',
-        color: '#8892b0',
-    },
-    button: {
-        width: '100%',
-        padding: '16px 24px',
-        fontSize: '16px',
-        fontWeight: 600,
-        border: 'none',
-        borderRadius: '12px',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-    },
-    primaryButton: {
-        background: 'linear-gradient(90deg, #fc6e51, #e74c3c)',
-        color: '#fff',
-    },
-    secondaryButton: {
-        background: 'rgba(255, 255, 255, 0.05)',
-        color: '#fff',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
-    },
-    disconnectButton: {
-        background: 'transparent',
-        color: '#8892b0',
-        fontSize: '14px',
-        padding: '8px 16px',
-        marginTop: '12px',
-    },
-    statusCard: {
-        background: 'rgba(100, 255, 218, 0.05)',
-        border: '1px solid rgba(100, 255, 218, 0.2)',
-    },
-    txLink: {
-        color: '#64ffda',
-        textDecoration: 'none',
-        wordBreak: 'break-all' as const,
-    },
-    loadingDots: {
-        display: 'inline-block',
-        animation: 'pulse 1.5s ease-in-out infinite',
-    },
-    footer: {
-        textAlign: 'center' as const,
-        fontSize: '12px',
-        color: '#5a6a8a',
-        marginTop: '24px',
-    },
-    footerLink: {
-        color: '#64ffda',
-        textDecoration: 'none',
-    },
-    notConnectedMessage: {
-        color: '#8892b0',
-        fontSize: '14px',
-        textAlign: 'center' as const,
-    },
-};
 
 type TxStatus = 'idle' | 'pending' | 'success' | 'cancelled';
 
@@ -212,134 +71,123 @@ function App() {
     };
 
     return (
-        <div style={styles.body}>
-            <div style={styles.container}>
-                {/* Header */}
-                <header style={styles.header}>
-                    <div style={styles.logo}>🔢</div>
-                    <h1 style={styles.title}>StackCounter</h1>
-                    <p style={styles.subtitle}>
-                        A minimal dApp demonstrating WalletKit SDK usage on Stacks mainnet
-                    </p>
-                </header>
+        <div className="app-container">
+            {/* Header */}
+            <header className="header">
+                <div className="logo-display">🔢</div>
+                <h1 className="title">StackCounter</h1>
+                <p className="subtitle">
+                    A minimal dApp demonstrating WalletKit SDK usage on Stacks mainnet
+                </p>
+            </header>
 
-                {/* Wallet Card */}
-                <div style={styles.card}>
-                    <div style={styles.cardTitle}>Wallet Connection</div>
-                    {connected && address ? (
-                        <>
-                            <div style={styles.walletAddress}>{address}</div>
-                            <button
-                                style={{ ...styles.button, ...styles.disconnectButton }}
-                                onClick={handleDisconnect}
-                            >
-                                Disconnect
-                            </button>
-                        </>
-                    ) : (
+            {/* Wallet Card */}
+            <div className="card">
+                <div className="card-title">Wallet Connection</div>
+                {connected && address ? (
+                    <>
+                        <div className="wallet-address-box">{address}</div>
                         <button
-                            style={{ ...styles.button, ...styles.primaryButton }}
-                            onClick={handleConnect}
+                            className="btn btn-text"
+                            onClick={handleDisconnect}
                         >
-                            🔗 Connect Wallet
+                            Disconnect
                         </button>
-                    )}
-                </div>
+                    </>
+                ) : (
+                    <button
+                        className="btn btn-primary"
+                        onClick={handleConnect}
+                    >
+                        <span>🔗</span> Connect Wallet
+                    </button>
+                )}
+            </div>
 
-                {/* Counter Card */}
-                <div style={styles.card}>
-                    <div style={styles.cardTitle}>Onchain Counter</div>
-                    {connected ? (
-                        <>
-                            <div style={styles.counterDisplay}>
-                                <span style={styles.counterValue}>
-                                    {counter !== null ? counter : '—'}
-                                </span>
-                                <span style={styles.counterLabel}>Current Count</span>
-                                <button
-                                    onClick={fetchCounter}
-                                    style={{
-                                        background: 'rgba(255,255,255,0.1)',
-                                        border: 'none',
-                                        color: '#64ffda',
-                                        padding: '8px 16px',
-                                        borderRadius: '8px',
-                                        cursor: 'pointer',
-                                        fontSize: '12px',
-                                        marginTop: '8px',
-                                    }}
-                                >
-                                    🔄 Refresh Count
-                                </button>
-                            </div>
+            {/* Counter Card */}
+            <div className="card">
+                <div className="card-title">Onchain Counter</div>
+                {connected ? (
+                    <>
+                        <div className="counter-wrapper">
+                            <span className="counter-value">
+                                {counter !== null ? counter : '—'}
+                            </span>
+                            <span className="counter-label">Current Count</span>
                             <button
-                                style={{
-                                    ...styles.button,
-                                    ...styles.primaryButton,
-                                    marginTop: '20px',
-                                    opacity: loading ? 0.7 : 1,
-                                }}
-                                onClick={handleIncrement}
-                                disabled={loading}
+                                onClick={fetchCounter}
+                                className="btn btn-sm btn-secondary"
+                                style={{ marginTop: '16px' }}
                             >
-                                {loading ? '⏳ Waiting for signature...' : '➕ Increment Counter'}
+                                🔄 Refresh
                             </button>
-                        </>
-                    ) : (
-                        <p style={styles.notConnectedMessage}>
-                            Connect your wallet to interact with the counter
-                        </p>
-                    )}
-                </div>
-
-                {/* Transaction Status Card */}
-                {txStatus !== 'idle' && (
-                    <div style={{ ...styles.card, ...styles.statusCard }}>
-                        <div style={styles.cardTitle}>Transaction Status</div>
-                        {txStatus === 'pending' && (
-                            <p style={{ color: '#ffd700', margin: 0 }}>
-                                ⏳ Please sign the transaction in your wallet...
-                            </p>
-                        )}
-                        {txStatus === 'success' && txId && (
-                            <>
-                                <p style={{ color: '#64ffda', margin: '0 0 8px 0' }}>
-                                    ✅ Transaction submitted!
-                                </p>
-                                <p style={{ color: '#8892b0', margin: '0 0 12px 0', fontSize: '13px' }}>
-                                    ⏱️ Mainnet transactions take ~10-30 min to confirm. Counter will auto-refresh.
-                                </p>
-                                <a
-                                    href={getExplorerUrl(txId)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={styles.txLink}
-                                >
-                                    View on Explorer →
-                                </a>
-                            </>
-                        )}
-                        {txStatus === 'cancelled' && (
-                            <p style={{ color: '#ff6b6b', margin: 0 }}>
-                                ❌ Transaction was cancelled
-                            </p>
-                        )}
+                        </div>
+                        <button
+                            className="btn btn-primary"
+                            style={{ marginTop: '20px' }}
+                            onClick={handleIncrement}
+                            disabled={loading}
+                        >
+                            {loading ? '⏳ Waiting for signature...' : '➕ Increment Counter'}
+                        </button>
+                    </>
+                ) : (
+                    <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' }}>
+                        Connect your wallet to interact with the counter
                     </div>
                 )}
-
-                {/* Footer */}
-                <footer style={styles.footer}>
-                    Contract:{' '}
-                    <a
-                        href="https://explorer.stacks.co/address/SP7EGRZWRGBDHWDMJAYER4D40JM8XZCEX14M4ATQ.counter-contract-v2?chain=mainnet"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={styles.footerLink}
-                    >
-                        counter-contract-v2
-                    </a>
-                </footer>
             </div>
+
+            {/* Transaction Status Card */}
+            {txStatus !== 'idle' && (
+                <div className={`card status-card ${txStatus === 'success' ? 'success' : txStatus === 'cancelled' ? 'error' : ''}`}>
+                    <div className="card-title">Transaction Status</div>
+                    {txStatus === 'pending' && (
+                        <div className="status-content">
+                            <p className="status-text" style={{ color: '#ffd700' }}>
+                                ⏳ Please sign the transaction in your wallet...
+                            </p>
+                        </div>
+                    )}
+                    {txStatus === 'success' && txId && (
+                        <div className="status-content">
+                            <p className="status-text" style={{ color: '#2ecc71' }}>
+                                ✅ Transaction submitted!
+                            </p>
+                            <p className="status-sub">
+                                Mainnet transactions may take 10-30 min to confirm. The counter will update automatically.
+                            </p>
+                            <a
+                                href={getExplorerUrl(txId)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="tx-link"
+                            >
+                                View on Explorer →
+                            </a>
+                        </div>
+                    )}
+                    {txStatus === 'cancelled' && (
+                        <div className="status-content">
+                            <p className="status-text" style={{ color: '#ff6b6b' }}>
+                                ❌ Transaction was cancelled
+                            </p>
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Footer */}
+            <footer className="footer">
+                Contract:{' '}
+                <a
+                    href="https://explorer.stacks.co/address/SP7EGRZWRGBDHWDMJAYER4D40JM8XZCEX14M4ATQ.counter-contract-v2?chain=mainnet"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    counter-contract-v2
+                </a>
+            </footer>
         </div>
     );
 }
