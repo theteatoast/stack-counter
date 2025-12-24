@@ -37,7 +37,7 @@ export async function getCounter(): Promise<number> {
             functionArgs: [],
             senderAddress: CONTRACT_ADDRESS,
         });
-        return cvToValue(result) as number;
+        return Number(cvToValue(result));
     } catch (error) {
         console.error('Error fetching counter:', error);
         return 0;
